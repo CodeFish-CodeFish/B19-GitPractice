@@ -138,6 +138,193 @@ SELECT FIRST_NAME || '_' ||last_name as fullname from employees;
 select first_name , last_name , salary from employees where salary >= 15000;
 
 
+--class 2 3/20/24
+
+-- firstname lastname empl who who at departmement_id = 50;
+
+--FIrst name , last name , salary empl who wokr in department 50 and salary  > 5000;
+
+select first_name , last_name from employees where department_id = 50;
+
+select * from departments;
+
+select first_name , last_name , salary from employees where department_id = 50 and salary >5000;
+
+--find empl who work at department 50 and empl at department 60
+
+select first_name , last_name , department_id from employees where department_id = 50 or department_id = 60;
+
+--find empl who have first_name starts with A
+select * from employees where first_name like 'A%';
+--get empl first and last name and email as lower case and name the result-set column as email
+select first_name , last_name , lower(email) as email from employees;
+--get the empl first name and concat the upper case lastName ;
+select concat(first_name , upper(last_name)) from employees;
+select first_name || ' ' ||upper(last_name) from employees;
+
+--get the email as initcap concat first 3 letters from LastName and concat @gmail.com
+select initcap(email) || substr(last_name , 1, 3) || '@gmail.com' from employees;
+--get the all empl infor and where emplId is not 100 105 and 102
+select * from employees where employee_id not in (100, 105, 102 ) ;
+
+--find empl where 2nd letter of last name is  b
+select * from employees where last_name like '_a%';
+--find empl infor who have lst name length only 5
+select * from employees where Length(last_name) = 5;
+
+--Sorting -- Order by
+
+select * from employees order by first_name asc;
+select * from employees order by first_name desc;
+
+select * from employees order by first_name asc , last_name asc;
+--sorting is going to have by first column (duplicates) , second column
+
+--first name , last ,salary then order it by salary
+select * from employees order by salary;
+
+--find people who make more than 5000 adn order by asc salary
+select * from employees where salary > 5000 order by salary;
+--find first_name , last_name , salary , depratment_id  where salary is more than 10000 and deparmtnes is
+--not 50 order by
+--first_name ;
+
+select first_name , last_name ,
+salary , department_id
+from employees
+where salary > 10000
+and  not department_id = 50;
+
+
+--find people with commission_pct;
+--is not
+select * from employees where commission_pct is not null;
+select * from departments;
+
+
+--uniqe values --distinct
+
+select distinct first_name from employees order by first_name;
+
+select distinct department_id , first_name from employees  order by first_name;
+select distinct job_id , department_id from employees;
+
+
+select country_id from locations;
+select * from locations;
+
+select * from countries;
+
+
+---Round , Trunc , MOD
+select salary + 0.9 from employees;
+select round(salary + 0.9) from employees;
+select round(salary + 0.5) from employees;
+
+select trunc(salary + 0.9)  from employees;
+
+select first_name , last_name  ,  salary , mod(salary, 5000) from employees order by salary;
+select first_name , last_name  ,  salary  from employees order by salary;
+
+--Multiple row functions aka Aggregate functions
+--count, min  , max , sum ,AVG
+
+select count(*) from employees;
+select count(country_name ) from countries;
+
+select avg(salary) from employees; -- only works with numeric values;
+
+select sum(salary ) from employees; --only works with numeric values
+
+select max(salary) from employees;
+
+select min(salary) from employees;
+
+select min(first_name) from employees;
+
+select max(salary), first_name from employees;
+
+--group by clause
+
+--get the avg salary and round it ;
+--get the avg salary and trunc it ;
+
+select round(avg(salary)) from employees;
+select trunc(avg(salary)) from employees;
+
+select avg(round(salary)) from employees;
+
+select * from employees;
+
+select department_id , round(avg(salary)) from employees having salary > 5000 group by department_id;
+
+select first_name from employees group by first_name order by first_name;
+
+select department_id , round(avg(salary)) from employees group by department_id  having round(avg(salary)) > 5000;
+
+--count the numb of employees in each job_id category
+select job_id , count(*) as numb_of_employees from employees group by job_id;
+
+--how much salary company spend a year;
+select sum(salary)*12 from employees;
+select sum(salary) from employees;
+
+-- find the total salary exp for each depratment
+select department_id , sum(salary) from employees group by department_id;
+
+-- find the avg salary exp for each depratment where salary greater than 5000;
+select department_id , trunc(avg(salary)) from employees group by department_id having trunc(avg(salary)) > 5000;
+
+select job_id , count(*) as num_of_empl
+from employees
+group by job_id
+having count(*) > 10;
+
+-- find departments with total salaries exceeding 100 000
+select department_id , sum (salary)
+from employees
+group by department_id
+having sum(salary ) > 100000;
+
+
+-- subqery -- nested query
+select * from employees where first_name  = (select first_name from employees where first_name = 'Alexander');
+
+select * from employees order by salary desc;
+
+select first_name from employees where salary = (select max(salary) from employees);
+
+select first_name from employees where salary = 24000;
+
+select first_name
+from employees
+where salary = (select max(salary)
+from employees where salary != (select max(salary) from employees));
+
+
+
+--rownum
+select first_name , salary from employees where rownum <= 2 order by salary ;
+--LIMIT
+
+select * from departments;
+
+--empl first last name department_id where department name Sales;
+
+select first_name , last_name , department_id
+from employees
+where department_id = (select
+department_id
+from departments
+where department_name = 'Sales');
+
+--ORder of the keywords
+--Select
+--from
+--where
+--group by
+--having
+--order by
 
 
 
