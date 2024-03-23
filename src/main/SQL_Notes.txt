@@ -543,7 +543,7 @@ from departments d
 left join employees e
 on d.department_id = e.department_id;
 
-
+--git new line
 
 
 
