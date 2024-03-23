@@ -325,6 +325,249 @@ where department_name = 'Sales');
 --group by
 --having
 --order by
+--------------------------------------------------------
+
+SQL database
+3/19/24
+
+Recap - Select where aggregate functions , group by , order by having
+subquery
+
+joins -
+set operators -
+
+
+------------------------------------------------------------------------------------
+
+--select all employees from only 2 departments 100 and 110
+2 options
+
+select * from employees where department_id in(100, 110);
+
+-- find employees with salaries > 10 000 excluding department 50
+get the first_name , last_name , salaries > 10000 and department_id is not 50
+
+select first_name , last_name , salary from employees where salary > 10000 and department_id !=50;
+
+select first_name , last_name , salary, department_id from employees where salary > 10000 and department_id <> 50;
+
+--Find employees where first_name start with 'A'
+
+select * from employees where first_name like 'A%';
+
+
+--Find employees HIRED IN "JUNE"
+select * from employees where hire_date like '__JUN__';
+
+-- get employees with concat first and last name with a " " space and all data in upper case resultset column shoud be named Full name
+SELECT UPPER(FIRST_NAME || ' ' || LAST_NAME ) AS FULL_NAME FROM EMPLOYEES;
+
+
+AGGREGATE FUNCTIONS - MULTIPLE  ROW FUNCTION
+-- COUNT THE NUMBER OF EMPLOYEES IN EACH DEPARTMENT
+THE OUTPUT SHOULD BE
+DEPARTMENT_ID   COUNT(*)
+50 				15
+
+SELECT DEPARTMENT_ID , COUNT(FIRST_NAME) AS NUM_EMPLOYEES FROM EMPLOYEES GROUP BY DEPARTMENT_ID;
+
+--CALCULATE THE AVARAGE SALARY FOR EACH JOB_ID
+SELECT JOB_ID , AVG(SALARY) FROM EMPLOYEES GROUP BY JOB_ID;
+
+
+--GET ALL UNIQUE JOB_ID - TO KNOW HOW MANY JOBS WE HAVE
+SELECT DISTINCT JOB_ID FROM EMPLOYEES;
+DISTINCT IS A KEYWORD RETURNS ONLY UNIQUE RESULT SET ROWS (VALUES)
+SELECT DISTINCT JOB_ID FROM EMPLOYEES;
+SELECT  DISTINCT DEPARTMENT_ID FROM EMPLOYEES;
+
+SUBQUERY NESTED
+--FIND EMPLOYEES WITH SMALLEST SALARY
+SELECT * FROM EMPLOYEES WHERE SALARY = (SELECT MIN(SALARY) FROM EMPLOYEES);
+
+-- get all emploees with departments name = Sales
+select * from employees where department_id =  (select department_id from departments where department_name = 'Sales');
+
+--find the max salary in employees table
+select max(salary) from employees;
+
+--find sum of salary in each department in employees table
+sum of salary in each department_id
+GROUP BY CAN BE USED WITHOUT AGGREGATE FUNCTIONS (SINGLE ROW FUNCTION)
+AGGREGATE FUNCTION MOSTLY USED WITH GROUP BY.
+select department_id , sum(salary) from employees group by department_id;
+
+--COUNT GROUP OF PEOPLE WITH DIFFERENT COMMISSION PERCENTAGE
+7 - 0.3
+5 - 0.9
+SELECT COUNT(COMMISSION_PCT) FROM EMPLOYEES;
+
+SELECT * FROM EMPLOYEES WHRE ROWNUM <=2;
+
+------------------------------------------------
+
+JOIN - clause is used to combine rows from two or more tables, based on related
+column between them.
+
+3 TYPES OF JOINS :
+		--INNER JOIN
+		--OUTTER JOIN:
+			FULL JOINT (FULL OUTTER JOIN)
+			RIGHT JOIN (RIGHT OUTTER JOIN)
+			LEFT JOIN
+		SELF JOIN
+NATURAL JOIN
+
+INNER JOIN - RETURNS ONLY MATCHING ROWS DATA FROM TWO TABLES.
+if you use just join keyword by default it is inner join
+JOINS CAN BE DONE ONLY WITH PRIMARY AND FOREGN KEYS
+
+SYNTAX
+select e.first_name , e.last_name , d.department_name
+from employees e
+inner join departments d --table you connection
+on e.department_id = d.department_id; -- foregn key to primary key
+
+
+FULL OUTTER JOIN -  RETURN ALL RESULTS FROM LEFT AND ALL RESULTS FROM RIGHT TABLES.
+select e.first_name , e.last_name , d.department_name , e.department_id
+from departments d
+full join  employees e
+on e.department_id = d.department_id;
+
+
+LEFT OUTTER JOIN - WILL RETURN ALL RESULTS FROM LEFT TABLE AND ONLY MATCHING DATA FROM THE RIGHT TABLE
+select e.first_name , e.last_name , d.department_name , e.department_id
+from departments d
+LEFT join  employees e
+on e.department_id = d.department_id;
+LEFT TABLE IS THE TABLE AFTER FROM - IF WE SELECT IT FROM THE TABLE FIRST IT WILL BE LEFT TABLE
+AND RIGHT TABLE WILL BE THE JOINING TABLE - WHICH IS EMPLOYEES TABLE
+
+CHOOSING TABLE WILL BE LEFT TABLE.
+JOINS TABLE WILL BE RIGHT TABLE.
+
+RIGHT OUTTER JOIN - WILL RETURN ALL RESULTS FROM RGIHT TABLE AND ONLY MATCHING DATA FROM THE LEFT TABLE
+select e.first_name , e.last_name , d.department_name , e.department_id
+from departments d
+RIGHT join  employees e
+on d.department_id = e.department_id;
+
+SELF JOIN - REGULAR JOINS BUT TABLES JOINED BY ITSELF
+SELECT e1.first_name as empl1 , e2.first_name as empl2 , e1.job_id
+from employees e1
+join employees e2
+on e1.employee_id != e2.employee_id and e1.job_id = e2.job_id;
+
+NATURAL JOIN - kind of inner join
+
+SELECT e.first_name , d.department_name
+	from employees e
+	Natural join departments d order by e.first_name;
+
+----------------------------------------------------------------
+
+get everything from jobs
+get everything from job_history;
+join job_history and Jobs tables
+inner
+select * from jobs j
+inner join job_history
+on j.job_id = jh.job_id;
+
+full
+select * from jobs j
+full join job_history
+on j.job_id = jh.job_id;
+
+left
+select * from jobs j
+left join job_history
+on j.job_id = jh.job_id;
+
+right
+select * from jobs j
+right join job_history
+on j.job_id = jh.job_id;
+
+
+-- find people who worked in our company
+join job_history and employees
+and get first_name , last_name , department_id , start_date , end_date
+
+select e.first_name , e.last_name , e.department_id , jh.start_date , jh.end_date
+from employees e
+join job_history jh
+on e.employee_id = jh.employee_id;
+
+--fileter out only employees who worked starting JAN 89 and end 94
+select e.first_name , e.last_name , e.department_id , jh.start_date , jh.end_date
+from employees e
+join job_history jh
+on e.employee_id = jh.employee_id
+where jh.start_date > '01-JAN-89' AND jh.end_date < '31-DEC-94';
+
+--find the  country name , region name;
+select country_name , region_name
+from countries c
+join regions r
+on c.region_id = r.region_id;
+
+-- find how many country_name in each region
+join , count(c.country_name),
+group by
+Select r.region_name , count(c.country_name)
+from countries c
+join regions r
+on c.region_id = r.region_id
+group by r.region_name;
+
+--join 3 tables locations, countries , regions;
+Select r.region_name , country_name , city
+from countries c
+join regions r
+on c.region_id = r.region_id
+join locations l
+on l.country_id = c.country_id;
+
+-- list all the departments including those without employees
+left table is department
+department_id , first and last_name
+left join
+on department_id
+employyes
+-- 3 min
+
+select d.department_id , e.first_name , e.last_name
+from departments d
+left join employees e
+on d.department_id = e.department_id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
