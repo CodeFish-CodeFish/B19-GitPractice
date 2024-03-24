@@ -547,6 +547,383 @@ on d.department_id = e.department_id;
 
 
 
+-----CLASS 4
+class 4 sql
+
+
+join
+
+--- find departmets names with more than 5 employees
+d.department_name , count(e.employee_id) as num_employees
+departments
+ inner join employyes
+ group by
+ having > 5;
+
+select d.department_name , count(e.employee_id) as num_employees
+from departments d
+join employees e
+on e.department_id = d.department_id
+group by d.department_name
+having count(e.employee_id) > 5;
+
+
+
+
+----------
+
+-- subquery
+find employees earning more than avarage salary
+select first_name , last_name ,salary
+from employees
+where salary > (select avg(salary) from employees);
+
+-- find avg salary by departmetn_name
+department_name , avg(salary)
+join departments on department_id
+
+select d.department_name , avg(salary)
+from employyes e
+join departments d
+on e.department_id = d.department_id
+group by d.department_name
+order by avg(salary) desc;
+
+-- find departments with the highest paid employees
+department_id , max(salary) as max salary
+group by department_id
+having max(salary) > (subquery getting avg salary)
+
+
+select department_id , max(salary) as max_salary
+from employees
+group by department_id
+Having max(salary) > (select avg(salary) from employees);
+
+
+----------------------------------------------------------------------
+
+self join
+find employees managers
+
+select e1.first_name ,e1.last_name , e2.first_name as Mfirst_name, e2.last_name  as Mlast_name
+from employees e1
+join employees e2
+on e1.manager_id = e2.employee_id
+order by e2.first_name;
+----------------------------------------------------------------------
+SOUND MORE PROFFESSIONAL
+
+	YES - I KNOW SQL REALLY WELL
+	I KNOW DQL , DML , DDL COMMANDS
+	AND I AM ALSO FAMILIER WITH
+	DCL COMMANDS.
+	I CAN EASEALY JOINS TABLE
+	I KNOW ALL JOINS         KEY
+	I KNOW AGGREGATE FUNCTIONS
+	MAX(), GROUP BY
+	SET COMMANDS
+	UNION , UNION ALL , INTERSECT
+	JDBC LIBRARY I CAN CONNECT MY DATABASE TO MY JAVA TO DO AUTOMATION.
+
+ (PRIMARY KEY) - UNIQE , CAN NOT BE NULL. ()
+ FOREGN - CAN BE NULL AND DUPLICATED
+
+----------------------------------------------------------------------
+SET OPERATORS
+
+These are used to get meaningful results from data stored in the table, under different special conditions.
+
+ETL - EXTRACT TRANSFER LOAD
+
+
+
+--MINUS get result from the second query and substract from the first query result;
+==
+SELECT * FROM EMPLOYEES
+WHERE FIRST_NAME IN ('John' ,  'Peter')
+minus
+SELECT * FROM EMPLOYEES
+WHERE FIRST_NAME  = 'John' ;
+OUTPUT IS PETER
+
+==
+SYNTAX FOR SET OPERATORS - THE COLUMN DATATYPE AND NUMBER OF COLUMN and order of column shoud be same .
+select first_name , salary from employees
+union
+select salary, first_name from employees;
+this will not work because of order columns
+
+==
+SELECT DEPARTMENT_ID FROM EMPLOYEES --ONE PERTSON HAS DEPARTMENT_ID NULL
+MINUS
+SELECT DEPARTMENT_ID FROM DEPARTMENTS;
+==
+FROM THE  FIRST QUERY WE HAVE A LOT DEPARTMENT_ID AND ONLY ONE NULL VALUE
+SECOND QUERY HAS A LOT OF DEPARTMENT_ID WHICH IS SAME AS FROM FIRST QUERY
+BUT SECOND QUERY DOES NOT HAVE NULL
+THE OUTPUT WILL BE ONE DEPARTMENT_ID NULL
+
+
+FIRST_NAME - MINUS-|SECONDQUERY
+ALEX				|ALEX
+JOHN 				|JOHN
+PETER				|GIANT
+BOB					|TOM
+
+OUTPUT WILL BE ALWAYS FROM FIRST QUERY
+PETER
+BOB
+
+--UNION -> UNION is used to combine the results of two or more SELECT statements. However, it will eliminate duplicate rows from its result.
+
+FIRST_NAME - UNION -|SECONDQUERY
+ALEX				|ALEX
+JOHN 				|JOHN
+PETER				|GIANT
+BOB					|TOM
+
+OUTPUT
+ALEX
+JOHN
+PETER
+GIANT
+BOB
+TOM
+
+SELECT *  FROM EMPLOYEES
+WHERE FIRST_NAME  = 'John' and last_name =  'Chen'
+union
+SELECT *  FROM EMPLOYEES
+WHERE FIRST_NAME in('Steven','John') and last_name in( 'King','Chen');
+
+--UNION ALL SAME AS UNION BUT IT IS NOT GOING TO REMOVE THE DUPLICATES
+
+SELECT * FROM EMPLOYEES WHERE FIRST_NAME LIKE 'A%'
+UNION all
+SELECT * FROM EMPLOYEES WHERE FIRST_NAME LIKE 'Amit';
+
+SELECT * FROM EMPLOYEES WHERE FIRST_NAME LIKE 'A%' order by first_name;
+SELECT * FROM EMPLOYEES WHERE FIRST_NAME LIKE 'Amit';
+
+
+-- INTERSECT -
+
+INTERSECT -> Intersect operation is used to combine two SELECT statements, but it only returns the records which are common from both SELECT statements. In the case of Intersect, the number of columns and datatype must be the same.
+
+SELECT * FROM EMPLOYEES WHERE FIRST_NAME LIKE 'A%'
+INTERSECT
+SELECT * FROM EMPLOYEES WHERE FIRST_NAME LIKE 'Amit';
+
+OUTPUT
+AMIT INFO
+
+
+SELECT * FROM EMPLOYEES WHERE FIRST_NAME LIKE 'A%'
+INTERSECT
+SELECT * FROM EMPLOYEES WHERE FIRST_NAME LIKE 'Amit';
+
+----------------------------------------------------------------------
+
+DDL - DATA DEFFINITION LANGUAGE
+CREATE - CREATING TABLES
+	SYNTAX
+		CREATE TABLE <TABLE_NAME> (COLUMN_NAME DATATYPE,COLUMN_NAME2 DATATYPE );
+
+
+DATATYPES MOST COMMON :
+		VARCHAR2 - STRING
+		NUMBER - NUMBER
+		DATE - DATE AND TIME
+select * from employees;
+
+CREATE TABLE STUDENT(student_id number primary key,
+						first_name varchar2(20),
+						last_name varchar2(20),
+						dateOfBirth date);
+----------------------------------------------------------------------
+DML - DATA MANIPULATION LANGUAGE
+		INSERT INTO STUDENT(student_id,
+							first_name,
+							last_name,
+							dateOfBirth)
+		VALUES (1,'John','Johns', to_date('2000-01-01','YYYY-MM-DD'));
+INSERT INTO STUDENT(student_id,
+							first_name,
+							last_name,
+							dateOfBirth)
+		VALUES (2,'Jane','Doe', to_date('1999-05-18','YYYY-MM-DD'));
+
+INSERT INTO STUDENT(student_id,
+							first_name,
+							last_name,
+							dateOfBirth)
+		VALUES (3,'Bo','Nicel', to_date('1990-05-23','YYYY-MM-DD'));
+
+INSERT INTO STUDENT(student_id,
+							first_name,
+							last_name,
+							dateOfBirth)
+		VALUES (4,'Jim','Beam', to_date('1987-12-01','YYYY-MM-DD'));
+
+commit; - this is how to save your data in to database.
+
+
+----------------------------------------------------------------------
+update - DML
+
+UPDATE <TABLE_NAME>
+SET <COLUMN_NAME> = <NEW_COLUMN_VALUE>
+WHERE = <CONDITIONS>;
+
+UPDATE STUDENT
+SET LAST_NAME = 'Obama'
+where student_id = 1;
+
+-- update studnt last_name , date of birth = to_date('change value','YYYY-MM-DD') where st_id 2
+
+update student
+set first_name = 'Alexader' , last_name = 'Macedonia',
+		dateOfBirth to_date('1187-12-25','YYYY-MM-DD')
+		where student_id = 2;
+
+update tj olson to 24000 salary
+
+----------------------------------------------------------------------
+DELETE DDL
+DELETE <TABLE_NAME> WHERE CONDITION;
+it is going to delete a row
+but you have option to choose what you want to delete
+with WHERE clause;
+there is an option to roll back you can revert delete ;
+
+rollback; - TO REVERT DELETE
+IF DATA HAS NOT BEEN COMMITED;
+
+
+TRUNCATE - WILL REMOVE ALL DATA FROM TABLE LIKE DELETE AND LEAVE THE SCHEEMA .
+NO OPTION TO ROLLBACK
+
+	TRUNCATE TABLE <TABLE_NAME>;
+TRUNCATE TABLE STUDENT;
+
+DROP TABLE <TABLE_NAME>; - IT WILL REMOVE THE TABLE ITSELF WITH SCHEEMA AND DATA;
+IT WILL DELETE EVERYTHING;
+NO OPTIONS TO ROLLBACK
+
+DELETE    			TRUNCATE  					 DROP
+YOU CAN DELETE 		IT WILL REMOVE 				REMOVE ALL THE TABLE
+ONLY ONE ROW 		ALL DATA 					NO OPTION WHERE
+WITH WHERE 			NO OPTIONS WHERE			NO SCHEEMA
+
+DROP TABLE STUDENT-4;
+----------------------------------------------------------------------
+
+
+
+CREATE TABLE STUDENT_B(student_id number,
+						first_name varchar2(20),
+						last_name varchar2(20),
+						dateOfBirth date);
+
+ALTER - DDL
+
+
+ADD COLUMN TO OUR TABLE
+ALTER TABLE <TABLE_NAME> ADD <COLUMN_NAME> DATATYPE;
+
+ALTER TABLE STUDENT_B ADD EMAIL VARCHAR(20);
+
+update student_b
+set email ='bob@gmail.com' where student_id = 1; -- to update data
+
+---------------------------------------------------------
+
+modify column -
+
+alter table student_b
+modify first_name varchar(200);
+
+---------------------------------------------------------
+drop the column
+alter table student_b
+drop column email;
+
+---------------
+
+rename column
+ALTER table student_b
+rename column dateOfBirth TO dob;
+
+--MAKE STUDENT_ID  PRIMARY KEY
+ALTER TABLE STUDENT_B
+ADD CONSTRAINT STUDENT_PK PRIMARY KEY (STUDENT_ID);
+
+
+--ALTER TABLE STUDENT_B
+DROP CONSTRAINT STUDENT_PK ;
+
+--RENAME TABLE NAME
+
+ALTER TABLE STUDENT_B
+RENAME TO STUDENT_V;
+
+
+--------------------------------------------------------
+
+STORED PROCEDURES - YOU CAN SAVE QUERIES TO VARIABLE
+VIEW  - IT IS CREATING VERTUAL TABLE AND REFFERING BY ANOTHER FUNCTIONS;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
